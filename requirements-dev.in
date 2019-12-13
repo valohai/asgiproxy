@@ -1,0 +1,6 @@
+-r ./requirements.in
+asgiref
+flake8
+pytest
+pytest-asyncio
+pytest-cov
