@@ -4,12 +4,25 @@
 #
 #    pip-compile requirements.in
 #
-aiohttp==3.6.2
-async-timeout==3.0.1      # via aiohttp
-attrs==19.3.0             # via aiohttp
-chardet==3.0.4            # via aiohttp
-idna==2.8                 # via yarl
-multidict==4.7.1          # via aiohttp, yarl
+aiohttp==3.7.4
+    # via -r requirements.in
+async-timeout==3.0.1
+    # via aiohttp
+attrs==19.3.0
+    # via aiohttp
+chardet==3.0.4
+    # via aiohttp
+idna==2.8
+    # via yarl
+multidict==4.7.1
+    # via
+    #   aiohttp
+    #   yarl
 starlette==0.13.0
+    # via -r requirements.in
+typing-extensions==3.7.4.3
+    # via aiohttp
 websockets==8.1
-yarl==1.4.2               # via aiohttp
+    # via -r requirements.in
+yarl==1.4.2
+    # via aiohttp
