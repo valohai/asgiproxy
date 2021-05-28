@@ -4,23 +4,18 @@ from asgiref.testing import ApplicationCommunicator
 from asgiproxy.config import BaseURLProxyConfigMixin, ProxyConfig
 from asgiproxy.context import ProxyContext
 from asgiproxy.proxies.http import proxy_http
-from tests.utils import http_response_from_asgi_messages
+from tests.utils import http_response_from_asgi_messages, make_http_scope
 
 
 @pytest.mark.asyncio
 async def test_asgiproxy():
-    scope = {
-        "type": "http",
-        "http_version": "1.1",
-        "method": "GET",
-        "path": "/",
-        "query_string": "",
-        "headers": [
-            (b"Host", b"http://127.0.0.1/"),
-            (b"User-Agent", b"Foo"),
-            (b"Accept", b"text/html"),
-        ],
-    }
+    scope = make_http_scope(
+        full_url="http://127.0.0.1/",
+        headers={
+            "Accept": "text/html",
+            "User-Agent": "Foo",
+        },
+    )
 
     class ExampleComProxyConfig(BaseURLProxyConfigMixin, ProxyConfig):
         upstream_base_url = "http://example.com"
