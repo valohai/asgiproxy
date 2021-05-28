@@ -1,4 +1,4 @@
-from typing import Union, Optional
+from typing import Optional, Union
 from urllib.parse import urljoin
 
 import aiohttp
@@ -29,7 +29,7 @@ class ProxyConfig:
         """
         Process upstream HTTP headers before they're passed to the client.
         """
-        return proxy_response.headers
+        return proxy_response.headers  # type: ignore
 
     def get_upstream_http_options(
         self, *, scope: Scope, client_request: Request, data
@@ -43,7 +43,8 @@ class ProxyConfig:
             params=client_request.query_params.multi_items(),
             data=data,
             headers=self.process_client_headers(
-                scope=scope, headers=client_request.headers
+                scope=scope,
+                headers=client_request.headers,
             ),
             allow_redirects=False,
         )
@@ -75,6 +76,6 @@ class BaseURLProxyConfigMixin:
         Process client HTTP headers before they're passed upstream.
         """
         if self.rewrite_host_header:
-            headers = headers.mutablecopy()
+            headers = headers.mutablecopy()  # type: ignore
             headers["host"] = self.rewrite_host_header
-        return super().process_client_headers(scope=scope, headers=headers)
+        return super().process_client_headers(scope=scope, headers=headers)  # type: ignore

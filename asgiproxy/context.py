@@ -1,4 +1,5 @@
 import asyncio
+from typing import Optional
 
 import aiohttp
 
@@ -7,9 +8,13 @@ from asgiproxy.config import ProxyConfig
 
 class ProxyContext:
     semaphore: asyncio.Semaphore
-    _session: aiohttp.ClientSession = None
+    _session: Optional[aiohttp.ClientSession] = None
 
-    def __init__(self, config: ProxyConfig, max_concurrency=20):
+    def __init__(
+        self,
+        config: ProxyConfig,
+        max_concurrency: int = 20,
+    ) -> None:
         self.config = config
         self.semaphore = asyncio.Semaphore(max_concurrency)
 
@@ -21,12 +26,12 @@ class ProxyContext:
             )
         return self._session
 
-    async def __aenter__(self):
+    async def __aenter__(self) -> "ProxyContext":
         return self
 
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
+    async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:  # noqa: ANN001
         await self.close()
 
-    async def close(self):
+    async def close(self) -> None:
         if self._session:
             await self._session.close()

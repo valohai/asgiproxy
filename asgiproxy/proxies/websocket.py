@@ -1,11 +1,12 @@
 import asyncio
 import logging
 import uuid
+from typing import Optional
 
 from aiohttp import ClientWebSocketResponse, WSMessage, WSMsgType
-from starlette.types import Scope, Receive, Send
+from starlette.types import Receive, Scope, Send
 from starlette.websockets import WebSocket
-from websockets import ConnectionClosed
+from websockets.exceptions import ConnectionClosed
 
 from asgiproxy.context import ProxyContext
 
@@ -23,7 +24,7 @@ class WebSocketProxyContext:
         id: str = None,
         client_ws: WebSocket,
         upstream_ws: ClientWebSocketResponse,
-    ):
+    ) -> None:
         self.id = str(id or uuid.uuid4())
         self.client_ws = client_ws
         self.upstream_ws = upstream_ws
@@ -97,8 +98,8 @@ class WebSocketProxyContext:
 async def proxy_websocket(
     *, context: ProxyContext, scope: Scope, receive: Receive, send: Send
 ) -> None:
-    client_ws: WebSocket = None
-    upstream_ws: ClientWebSocketResponse = None
+    client_ws: Optional[WebSocket] = None
+    upstream_ws: Optional[ClientWebSocketResponse] = None
     try:
         client_ws = WebSocket(scope=scope, receive=receive, send=send)
         await client_ws.accept()
