@@ -2,12 +2,19 @@ import re
 
 import setuptools
 
+
+def read_dependencies(filename):
+    with open(filename, 'r') as infp:
+        return [l for l in infp if not l.startswith('-r')]
+
+
 with open('./asgiproxy/__init__.py', 'r') as infp:
     version = re.search("__version__ = ['\"]([^'\"]+)['\"]", infp.read()).group(1)
 
+dependencies = read_dependencies("./requirements.in")
+
 try:
-    with open('./requirements-dev.in', 'r') as infp:
-        dev_dependencies = [l for l in infp if not l.startswith('-r')]
+    dev_dependencies = read_dependencies('./requirements-dev.in')
 except IOError:
     dev_dependencies = []
 
@@ -21,7 +28,7 @@ if __name__ == '__main__':
         maintainer='Aarni Koskela',
         maintainer_email='akx@iki.fi',
         license='MIT',
-        install_requires=['aiohttp', 'starlette', 'websockets'],
+        install_requires=dependencies,
         tests_require=dev_dependencies,
         extras_require={'dev': dev_dependencies},
         packages=setuptools.find_packages('.', exclude=('tests',)),
