@@ -3,12 +3,11 @@ import asyncio
 from typing import Tuple
 from urllib.parse import urlparse
 
-from starlette.types import ASGIApp, Receive, Scope, Send
+from starlette.types import ASGIApp
 
 from asgiproxy.config import BaseURLProxyConfigMixin, ProxyConfig
 from asgiproxy.context import ProxyContext
-from asgiproxy.proxies.http import proxy_http
-from asgiproxy.proxies.websocket import proxy_websocket
+from asgiproxy.simple_proxy import make_simple_proxy_app
 
 try:
     import uvicorn
@@ -26,23 +25,7 @@ def make_app(upstream_base_url: str) -> Tuple[ASGIApp, ProxyContext]:
         },
     )()
     proxy_context = ProxyContext(config)
-
-    async def app(scope: Scope, receive: Receive, send: Send):  # noqa: ANN201
-        if scope["type"] == "lifespan":
-            return None  # We explicitly do nothing here for this simple app.
-
-        if scope["type"] == "http":
-            return await proxy_http(
-                context=proxy_context, scope=scope, receive=receive, send=send
-            )
-
-        if scope["type"] == "websocket":
-            return await proxy_websocket(
-                context=proxy_context, scope=scope, receive=receive, send=send
-            )
-
-        raise NotImplementedError(f"Scope {scope} is not understood")
-
+    app = make_simple_proxy_app(proxy_context)
     return (app, proxy_context)
 
 
