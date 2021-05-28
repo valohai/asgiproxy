@@ -1,9 +1,9 @@
 import pytest
 from asgiref.testing import ApplicationCommunicator
 
-from asgiproxy.config import BaseURLProxyConfigMixin, ProxyConfig
 from asgiproxy.context import ProxyContext
 from asgiproxy.proxies.http import proxy_http
+from tests.configs import ExampleComProxyConfig
 from tests.utils import http_response_from_asgi_messages, make_http_scope
 
 
@@ -16,10 +16,6 @@ async def test_asgiproxy():
             "User-Agent": "Foo",
         },
     )
-
-    class ExampleComProxyConfig(BaseURLProxyConfigMixin, ProxyConfig):
-        upstream_base_url = "http://example.com"
-        rewrite_host_header = "example.com"
 
     context = ProxyContext(config=ExampleComProxyConfig())
 
