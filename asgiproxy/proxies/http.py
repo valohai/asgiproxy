@@ -1,3 +1,5 @@
+from typing import AsyncGenerator, Union
+
 import aiohttp
 from starlette.requests import Request
 from starlette.responses import Response, StreamingResponse
@@ -11,7 +13,7 @@ INCOMING_STREAMING_THRESHOLD = 512 * 1024
 OUTGOING_STREAMING_THRESHOLD = 1024 * 1024 * 5
 
 
-def determine_incoming_streaming(request) -> bool:
+def determine_incoming_streaming(request: Request) -> bool:
     if request.method in ("GET", "HEAD"):
         return False
 
@@ -35,47 +37,58 @@ def determine_outgoing_streaming(proxy_response: aiohttp.ClientResponse) -> bool
 
 
 async def get_proxy_response(
-    *, context: ProxyContext, scope: Scope, receive: Receive
+    *,
+    context: ProxyContext,
+    scope: Scope,
+    receive: Receive,
 ) -> aiohttp.ClientResponse:
     request = Request(scope, receive)
     should_stream_incoming = determine_incoming_streaming(request)
     async with context.semaphore:
+        data: Union[None, AsyncGenerator[bytes, None], bytes] = None
         if request.method not in ("GET", "HEAD"):
             if should_stream_incoming:
                 data = request.stream()
             else:
                 data = await request.body()
-        else:
-            data = None
 
         kwargs = context.config.get_upstream_http_options(
             scope=scope, client_request=request, data=data
         )
 
-        proxy_response = await context.session.request(**kwargs)
-    return proxy_response
+        return await context.session.request(**kwargs)
 
 
 async def convert_proxy_response_to_user_response(
-    *, context: ProxyContext, scope: Scope, proxy_response: aiohttp.ClientResponse
+    *,
+    context: ProxyContext,
+    scope: Scope,
+    proxy_response: aiohttp.ClientResponse,
 ) -> Response:
-    should_stream_outgoing = determine_outgoing_streaming(proxy_response)
     headers_to_client = context.config.process_upstream_headers(
         scope=scope, proxy_response=proxy_response
     )
-    response_kwargs = dict(status_code=proxy_response.status, headers=headers_to_client)
-    if should_stream_outgoing:
-        user_response = StreamingResponse(
-            content=read_stream_in_chunks(proxy_response.content), **response_kwargs
+    status_to_client = proxy_response.status
+    if determine_outgoing_streaming(proxy_response):
+        return StreamingResponse(
+            content=read_stream_in_chunks(proxy_response.content),
+            status_code=status_to_client,
+            headers=headers_to_client,  # type: ignore
         )
-    else:
-        user_response = Response(content=await proxy_response.read(), **response_kwargs)
-    return user_response
+    return Response(
+        content=await proxy_response.read(),
+        status_code=status_to_client,
+        headers=headers_to_client,  # type: ignore
+    )
 
 
 async def proxy_http(
-    *, context: ProxyContext, scope: Scope, receive: Receive, send: Send
-):
+    *,
+    context: ProxyContext,
+    scope: Scope,
+    receive: Receive,
+    send: Send,
+) -> None:
     proxy_response = await get_proxy_response(
         context=context, scope=scope, receive=receive
     )
