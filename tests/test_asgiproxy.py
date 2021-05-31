@@ -1,30 +1,42 @@
 import pytest
 from asgiref.testing import ApplicationCommunicator
+from starlette.requests import Request
 
-from asgiproxy.config import BaseURLProxyConfigMixin, ProxyConfig
 from asgiproxy.context import ProxyContext
 from asgiproxy.proxies.http import proxy_http
-from tests.utils import http_response_from_asgi_messages
+from tests.configs import ExampleComProxyConfig
+from tests.utils import http_response_from_asgi_messages, make_http_scope
+
+
+@pytest.mark.parametrize("full_url, expected_url", [
+    ("http://127.0.0.1/pathlet/?encode&flep&murp", "http://example.com/pathlet/?encode&flep&murp"),
+    ("http://127.0.0.1/pathlet/", "http://example.com/pathlet/"),
+])
+def test_query_string_passthrough(full_url, expected_url):
+    proxy_config = ExampleComProxyConfig()
+    scope = make_http_scope(
+        full_url=full_url,
+        headers={
+            "Accept": "text/html",
+            "User-Agent": "Foo",
+        },
+    )
+    client_request = Request(scope)
+    opts = proxy_config.get_upstream_http_options(
+        scope=scope, client_request=client_request, data=None
+    )
+    assert opts["url"] == expected_url
 
 
 @pytest.mark.asyncio
 async def test_asgiproxy():
-    scope = {
-        "type": "http",
-        "http_version": "1.1",
-        "method": "GET",
-        "path": "/",
-        "query_string": "",
-        "headers": [
-            (b"Host", b"http://127.0.0.1/"),
-            (b"User-Agent", b"Foo"),
-            (b"Accept", b"text/html"),
-        ],
-    }
-
-    class ExampleComProxyConfig(BaseURLProxyConfigMixin, ProxyConfig):
-        upstream_base_url = "http://example.com"
-        rewrite_host_header = "example.com"
+    scope = make_http_scope(
+        full_url="http://127.0.0.1/",
+        headers={
+            "Accept": "text/html",
+            "User-Agent": "Foo",
+        },
+    )
 
     context = ProxyContext(config=ExampleComProxyConfig())
 
