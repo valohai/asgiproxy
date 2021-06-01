@@ -3,7 +3,7 @@ from asgiref.testing import ApplicationCommunicator
 from starlette.requests import Request
 
 from asgiproxy.context import ProxyContext
-from asgiproxy.proxies.http import proxy_http
+from asgiproxy.simple_proxy import make_simple_proxy_app
 from tests.configs import ExampleComProxyConfig
 from tests.utils import http_response_from_asgi_messages, make_http_scope
 
@@ -39,11 +39,7 @@ async def test_asgiproxy():
     )
 
     context = ProxyContext(config=ExampleComProxyConfig())
-
-    async def app(scope, receive, send):
-        return await proxy_http(
-            context=context, scope=scope, receive=receive, send=send
-        )
+    app = make_simple_proxy_app(context, proxy_websocket_handler=None)
 
     async with context:
         acom = ApplicationCommunicator(app, scope)
