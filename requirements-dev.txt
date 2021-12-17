@@ -4,35 +4,35 @@
 #
 #    pip-compile requirements-dev.in
 #
-appdirs==1.4.4
-    # via black
-asgiref==3.3.4
-    # via -r requirements-dev.in
+asgiref==3.4.1
+    # via
+    #   -r requirements-dev.in
+    #   uvicorn
 astor==0.8.1
     # via flake8-simplify
 attrs==21.2.0
     # via
     #   flake8-bugbear
     #   pytest
-black==21.5b1
+black==21.12b0
     # via -r requirements-dev.in
-click==7.1.2
+click==8.0.3
     # via
     #   black
     #   pip-tools
     #   uvicorn
-coverage[toml]==5.5
+coverage[toml]==6.2
     # via pytest-cov
-flake8==3.9.2
+flake8==4.0.1
     # via
     #   -r requirements-dev.in
     #   flake8-bugbear
     #   flake8-isort
     #   flake8-print
     #   flake8-simplify
-flake8-bugbear==21.4.3
+flake8-bugbear==21.11.29
     # via -r requirements-dev.in
-flake8-isort==4.0.0
+flake8-isort==4.1.1
     # via -r requirements-dev.in
 flake8-plugin-utils==1.3.2
     # via flake8-return
@@ -40,71 +40,76 @@ flake8-print==4.0.0
     # via -r requirements-dev.in
 flake8-return==1.1.3
     # via -r requirements-dev.in
-flake8-simplify==0.14.1
+flake8-simplify==0.14.2
     # via -r requirements-dev.in
 h11==0.12.0
     # via uvicorn
 iniconfig==1.1.1
     # via pytest
-isort==5.8.0
+isort==5.10.1
     # via
     #   -r requirements-dev.in
     #   flake8-isort
 mccabe==0.6.1
     # via flake8
-mypy==0.812
+mypy==0.920
     # via -r requirements-dev.in
 mypy-extensions==0.4.3
     # via
     #   black
     #   mypy
-packaging==20.9
+packaging==21.3
     # via pytest
-pathspec==0.8.1
+pathspec==0.9.0
     # via black
-pep517==0.10.0
+pep517==0.12.0
     # via pip-tools
-pip-tools==6.1.0
+pip-tools==6.4.0
     # via -r requirements-dev.in
-pluggy==0.13.1
+platformdirs==2.4.0
+    # via black
+pluggy==1.0.0
     # via pytest
-py==1.10.0
+py==1.11.0
     # via pytest
-pycodestyle==2.7.0
+pycodestyle==2.8.0
     # via
     #   flake8
     #   flake8-print
-pyflakes==2.3.1
+pyflakes==2.4.0
     # via flake8
-pyparsing==2.4.7
+pyparsing==3.0.6
     # via packaging
-pytest==6.2.4
+pytest==6.2.5
     # via
     #   -r requirements-dev.in
     #   pytest-asyncio
     #   pytest-cov
-pytest-asyncio==0.15.1
+pytest-asyncio==0.16.0
     # via -r requirements-dev.in
-pytest-cov==2.12.0
+pytest-cov==3.0.0
     # via -r requirements-dev.in
-regex==2021.4.4
-    # via black
 six==1.16.0
     # via flake8-print
-testfixtures==6.17.1
+testfixtures==6.18.3
     # via flake8-isort
 toml==0.10.2
+    # via pytest
+tomli==1.2.3
     # via
     #   black
     #   coverage
+    #   mypy
     #   pep517
-    #   pytest
-typed-ast==1.4.3
-    # via mypy
-typing-extensions==3.10.0.0
-    # via mypy
-uvicorn==0.13.4
+typing-extensions==4.0.1
+    # via
+    #   black
+    #   mypy
+uvicorn==0.16.0
     # via -r requirements-dev.in
+wheel==0.37.0
+    # via pip-tools
 
 # The following packages are considered to be unsafe in a requirements file:
 # pip
+# setuptools
