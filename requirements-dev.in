@@ -1,4 +1,3 @@
--r ./requirements.in
 asgiref
 black
 flake8
