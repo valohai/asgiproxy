@@ -98,10 +98,11 @@ async def proxy_websocket(
     upstream_ws: Optional[ClientWebSocketResponse] = None
     try:
         client_ws = WebSocket(scope=scope, receive=receive, send=send)
-        await client_ws.accept()
+
         async with context.session.ws_connect(
             **context.config.get_upstream_websocket_options(scope=scope, client_ws=client_ws)
         ) as upstream_ws:
+            await client_ws.accept(subprotocol=upstream_ws.protocol)
             ctx = WebSocketProxyContext(client_ws=client_ws, upstream_ws=upstream_ws)
             await ctx.loop()
     finally:
