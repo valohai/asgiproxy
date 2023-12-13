@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Optional, Union, Iterable
 from urllib.parse import urljoin
 
 import aiohttp
@@ -36,6 +36,12 @@ class ProxyConfig:
         """
         return headers
 
+    def get_client_protocols(self, *, scope: Scope, headers: Headers) -> Iterable[str]:
+        """
+        Get client subprotocol list so it can be passed upstream.
+        """
+        return scope.get("subprotocols", [])
+
     def process_upstream_headers(
         self, *, scope: Scope, proxy_response: aiohttp.ClientResponse
     ) -> Headerlike:
@@ -71,6 +77,7 @@ class ProxyConfig:
             method=scope.get("method", "GET"),
             url=self.get_upstream_url(scope=scope),
             headers=self.process_client_headers(scope=scope, headers=client_ws.headers),
+            protocols=self.get_client_protocols(scope=scope, headers=client_ws.headers),
         )
 
 
