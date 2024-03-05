@@ -1,4 +1,4 @@
-from typing import Optional, Union, Iterable
+from typing import Iterable, Optional, Union
 from urllib.parse import urljoin
 
 import aiohttp
@@ -71,7 +71,7 @@ class ProxyConfig:
         """
         return dict(
             method=scope.get("method", "GET"),
-            url=self.get_upstream_url(scope=scope),
+            url=self.get_upstream_url_with_query(scope=scope),
             headers=self.process_client_headers(scope=scope, headers=client_ws.headers),
             protocols=self.get_client_protocols(scope=scope, headers=client_ws.headers),
         )
