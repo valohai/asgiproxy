@@ -6,7 +6,6 @@ from starlette.datastructures import Headers
 from starlette.requests import Request
 from starlette.types import Scope
 from starlette.websockets import WebSocket
-from starlette.datastructures import QueryParams
 
 Headerlike = Union[dict, Headers]
 
@@ -43,15 +42,6 @@ class ProxyConfig:
         """
         return scope.get("subprotocols", [])
 
-    def get_params(self, *, scope: Scope, headers: Headers) -> dict:
-        """
-        Get client query stream so it can be passed upstream.
-        """
-        qs = scope.get("query_string", b"")
-        if not qs:
-            return {}
-        return dict(QueryParams(qs))
-
     def process_upstream_headers(
         self, *, scope: Scope, proxy_response: aiohttp.ClientResponse
     ) -> Headerlike:
@@ -85,12 +75,9 @@ class ProxyConfig:
         """
         return dict(
             method=scope.get("method", "GET"),
-            url=self.get_upstream_url(scope=scope),
+            url=self.get_upstream_url_with_query(scope=scope),
             headers=self.process_client_headers(scope=scope, headers=client_ws.headers),
             protocols=self.get_client_protocols(scope=scope, headers=client_ws.headers),
-            params=self.get_params(
-                scope=scope, headers=client_ws.headers
-            ),
         )
 
 
