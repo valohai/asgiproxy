@@ -1,6 +1,31 @@
 [build-system]
-requires = [
-    "setuptools>=42",
-    "wheel",
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "asgiproxy"
+dynamic = ["version"]
+description = "Tools for building HTTP and Websocket proxies for the asynchronous ASGI protocol"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.8"
+authors = [
+    { name = "Valohai", email = "dev@valohai.com" },
 ]
-build-backend = "setuptools.build_meta"
+dependencies = [
+    "aiohttp",
+    "starlette",
+    "websockets",
+]
+
+[project.urls]
+Homepage = "https://github.com/valohai/asgiproxy"
+
+[tool.hatch.version]
+path = "asgiproxy/__init__.py"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/asgiproxy",
+]
+
