@@ -47,9 +47,7 @@ class WebSocketProxyContext:
             await self.upstream_ws.send_bytes(client_msg["bytes"])
             return True
 
-        raise UnknownMessage(
-            f"WSP {self.id}: Unknown client WS message: {client_msg}", client_msg
-        )
+        raise UnknownMessage(f"WSP {self.id}: Unknown client WS message: {client_msg}", client_msg)
 
     async def send_upstream_to_client(self, upstream_msg: WSMessage):
         if upstream_msg.type == WSMsgType.text:
@@ -84,9 +82,7 @@ class WebSocketProxyContext:
         ctu_task = asyncio.create_task(self.client_to_upstream_loop())
         utc_task = asyncio.create_task(self.upstream_to_client_loop())
         try:
-            await asyncio.wait(
-                [ctu_task, utc_task], return_when=asyncio.FIRST_COMPLETED
-            )
+            await asyncio.wait([ctu_task, utc_task], return_when=asyncio.FIRST_COMPLETED)
             ctu_task.cancel()
             utc_task.cancel()
         except Exception:
@@ -104,9 +100,7 @@ async def proxy_websocket(
         client_ws = WebSocket(scope=scope, receive=receive, send=send)
         await client_ws.accept()
         async with context.session.ws_connect(
-            **context.config.get_upstream_websocket_options(
-                scope=scope, client_ws=client_ws
-            )
+            **context.config.get_upstream_websocket_options(scope=scope, client_ws=client_ws)
         ) as upstream_ws:
             ctx = WebSocketProxyContext(client_ws=client_ws, upstream_ws=upstream_ws)
             await ctx.loop()

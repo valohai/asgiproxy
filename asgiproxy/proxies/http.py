@@ -28,9 +28,7 @@ def determine_outgoing_streaming(proxy_response: aiohttp.ClientResponse) -> bool
     if proxy_response.status != 200:
         return False
     try:
-        return (
-            int(proxy_response.headers["content-length"]) > OUTGOING_STREAMING_THRESHOLD
-        )
+        return int(proxy_response.headers["content-length"]) > OUTGOING_STREAMING_THRESHOLD
     except (TypeError, ValueError, KeyError):
         # Malformed or missing content-length header; assume a streaming payload
         return True
@@ -89,9 +87,7 @@ async def proxy_http(
     receive: Receive,
     send: Send,
 ) -> None:
-    proxy_response = await get_proxy_response(
-        context=context, scope=scope, receive=receive
-    )
+    proxy_response = await get_proxy_response(context=context, scope=scope, receive=receive)
     user_response = await convert_proxy_response_to_user_response(
         context=context, scope=scope, proxy_response=proxy_response
     )

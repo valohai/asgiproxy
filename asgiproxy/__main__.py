@@ -36,9 +36,7 @@ def main():
     ap.add_argument("--host", type=str, default="0.0.0.0")  # noqa: S104
     args = ap.parse_args()
     if not uvicorn:
-        ap.error(
-            "The `uvicorn` ASGI server package is required for the command line client."
-        )
+        ap.error("The `uvicorn` ASGI server package is required for the command line client.")
     app, proxy_context = make_app(upstream_base_url=args.target)
     try:
         return uvicorn.run(host=args.host, port=int(args.port), app=app)
