@@ -69,7 +69,7 @@ class ProxyConfig:
         """
         return dict(
             method=scope.get("method", "GET"),
-            url=self.get_upstream_url(scope=scope),
+            url=self.get_upstream_url_with_query(scope=scope),
             headers=self.process_client_headers(scope=scope, headers=client_ws.headers),
         )
 
