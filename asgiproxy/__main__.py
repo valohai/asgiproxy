@@ -12,7 +12,7 @@ from asgiproxy.simple_proxy import make_simple_proxy_app
 try:
     import uvicorn
 except ImportError:
-    uvicorn = None
+    uvicorn = None  # type: ignore
 
 
 def make_app(upstream_base_url: str) -> Tuple[ASGIApp, ProxyContext]:
@@ -33,12 +33,10 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("target")
     ap.add_argument("--port", type=int, default=40404)
-    ap.add_argument("--host", type=str, default="0.0.0.0")
+    ap.add_argument("--host", type=str, default="0.0.0.0")  # noqa: S104
     args = ap.parse_args()
     if not uvicorn:
-        ap.error(
-            "The `uvicorn` ASGI server package is required for the command line client."
-        )
+        ap.error("The `uvicorn` ASGI server package is required for the command line client.")
     app, proxy_context = make_app(upstream_base_url=args.target)
     try:
         return uvicorn.run(host=args.host, port=int(args.port), app=app)

@@ -44,9 +44,7 @@ class ProxyConfig:
         """
         return proxy_response.headers  # type: ignore
 
-    def get_upstream_http_options(
-        self, *, scope: Scope, client_request: Request, data
-    ) -> dict:
+    def get_upstream_http_options(self, *, scope: Scope, client_request: Request, data) -> dict:
         """
         Get request options (as passed to aiohttp.ClientSession.request).
         """
@@ -61,9 +59,7 @@ class ProxyConfig:
             allow_redirects=False,
         )
 
-    def get_upstream_websocket_options(
-        self, *, scope: Scope, client_ws: WebSocket
-    ) -> dict:
+    def get_upstream_websocket_options(self, *, scope: Scope, client_ws: WebSocket) -> dict:
         """
         Get websocket connection options (as passed to aiohttp.ClientSession.ws_connect).
         """
@@ -81,9 +77,7 @@ class BaseURLProxyConfigMixin:
     def get_upstream_url(self, scope: Scope) -> str:
         return urljoin(self.upstream_base_url, scope["path"])
 
-    def process_client_headers(
-        self, *, scope: Scope, headers: Headerlike
-    ) -> Headerlike:
+    def process_client_headers(self, *, scope: Scope, headers: Headerlike) -> Headerlike:
         """
         Process client HTTP headers before they're passed upstream.
         """

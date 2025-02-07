@@ -1,7 +1,7 @@
 asgiproxy
 =========
 
-Tools for building HTTP and Websocket proxies for the asynchronous ASGI protocol. 
+Tools for building HTTP and Websocket proxies for the asynchronous ASGI protocol.
 
 ## Usage
 
@@ -29,5 +29,5 @@ Documentation forthcoming. For the time being, see `asgiproxy/__main__.py`.
 Tests are run with Py.test.
 
 ```bash
-py.test 
+py.test
 ```

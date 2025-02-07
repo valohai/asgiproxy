@@ -19,7 +19,7 @@ def make_simple_proxy_app(
     respective parameters.
     """
 
-    async def app(scope: Scope, receive: Receive, send: Send):  # noqa: ANN201
+    async def app(scope: Scope, receive: Receive, send: Send):
         if scope["type"] == "lifespan":
             return None  # We explicitly do nothing here for this simple app.
 
