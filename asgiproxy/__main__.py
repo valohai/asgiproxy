@@ -33,7 +33,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("target")
     ap.add_argument("--port", type=int, default=40404)
-    ap.add_argument("--host", type=str, default="0.0.0.0")
+    ap.add_argument("--host", type=str, default="0.0.0.0")  # noqa: S104
     args = ap.parse_args()
     if not uvicorn:
         ap.error(

@@ -29,7 +29,7 @@ class ProxyContext:
     async def __aenter__(self) -> "ProxyContext":
         return self
 
-    async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:  # noqa: ANN001
+    async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
         await self.close()
 
     async def close(self) -> None:
