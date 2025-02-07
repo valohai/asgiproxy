@@ -21,7 +21,7 @@ class WebSocketProxyContext:
     def __init__(
         self,
         *,
-        id: str = None,
+        id: Optional[str] = None,
         client_ws: WebSocket,
         upstream_ws: ClientWebSocketResponse,
     ) -> None:

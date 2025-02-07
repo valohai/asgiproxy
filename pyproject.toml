@@ -52,3 +52,9 @@ ignore = [
     "ANN201",
     "S101",
 ]
+
+[tool.mypy]
+
+[[tool.mypy.overrides]]
+module = "uvicorn.*"
+ignore_missing_imports = true

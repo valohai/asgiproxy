@@ -12,7 +12,7 @@ from asgiproxy.simple_proxy import make_simple_proxy_app
 try:
     import uvicorn
 except ImportError:
-    uvicorn = None
+    uvicorn = None  # type: ignore
 
 
 def make_app(upstream_base_url: str) -> Tuple[ASGIApp, ProxyContext]:
