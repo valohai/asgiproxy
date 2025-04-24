@@ -4,11 +4,11 @@ asgiref==3.8.1
     # via -r requirements-dev.in
 click==8.1.8
     # via uvicorn
-coverage==7.6.1
+coverage[toml]==7.6.1
     # via pytest-cov
 exceptiongroup==1.2.2
     # via pytest
-h11==0.14.0
+h11==0.16.0
     # via uvicorn
 iniconfig==2.0.0
     # via pytest
